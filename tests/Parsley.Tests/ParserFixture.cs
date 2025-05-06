@@ -37,7 +37,7 @@ namespace Parsley.Tests
             //Assert.That(parsed[0].Name, Is.EqualTo("Bob Marley"));
             Assert.That(parsed[0].Name.FirstName, Is.EqualTo("Bob"));
             Assert.That(parsed[0].Name.Surname, Is.EqualTo("Marley"));
-            Assert.That(parsed[0].IsMember, Is.EqualTo(true));
+            Assert.That(parsed[0].IsActive, Is.EqualTo(true));
             Assert.That(parsed[0].Subcription, Is.EqualTo(Subcription.Free));
             Assert.That(parsed[0].Errors, Is.Empty);
 
@@ -45,7 +45,7 @@ namespace Parsley.Tests
             //Assert.That(parsed[1].Name, Is.EqualTo("John Walsh"));
             Assert.That(parsed[1].Name.FirstName, Is.EqualTo("John Walsh"));
             Assert.That(parsed[1].Name.Surname, Is.EqualTo("McKinsey"));
-            Assert.That(parsed[1].IsMember, Is.EqualTo(false));
+            Assert.That(parsed[1].IsActive, Is.EqualTo(false));
             Assert.That(parsed[1].Subcription, Is.EqualTo(Subcription.Paid));
             Assert.That(parsed[1].Errors, Is.Empty);
         }
@@ -69,7 +69,7 @@ namespace Parsley.Tests
             //Assert.That(parsed[0].Name, Is.EqualTo("Bob Marley"));
             Assert.That(parsed[0].Name.FirstName, Is.EqualTo("Bob"));
             Assert.That(parsed[0].Name.Surname, Is.EqualTo("Marley"));
-            Assert.That(parsed[0].IsMember, Is.EqualTo(true));
+            Assert.That(parsed[0].IsActive, Is.EqualTo(true));
             Assert.That(parsed[0].Subcription, Is.EqualTo(Subcription.Free));
             Assert.That(parsed[0].Errors, Is.Empty);
 
@@ -77,7 +77,7 @@ namespace Parsley.Tests
             //Assert.That(parsed[1].Name, Is.EqualTo("John Walsh"));
             Assert.That(parsed[1].Name.FirstName, Is.EqualTo("John Walsh"));
             Assert.That(parsed[1].Name.Surname, Is.EqualTo("McKinsey"));
-            Assert.That(parsed[1].IsMember, Is.EqualTo(false));
+            Assert.That(parsed[1].IsActive, Is.EqualTo(false));
             Assert.That(parsed[1].Subcription, Is.EqualTo(Subcription.Paid));
             Assert.That(parsed[1].Errors, Is.Empty);
         }

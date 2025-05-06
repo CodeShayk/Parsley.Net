@@ -21,7 +21,7 @@ namespace Parsley.Tests
         public Name Name { get; set; }
 
         [Column(2)]
-        public bool IsMember { get; set; }
+        public bool IsActive { get; set; }
 
         [Column(3)]
         public Subcription Subcription { get; set; }
