@@ -1,0 +1,2 @@
+01, Bob Marley, True, Free
+02, John Walsh McKinsey, False, Paid
