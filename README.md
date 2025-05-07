@@ -8,9 +8,8 @@
 
 ## Introduction
 ### What is Parsley.Net?
-#### `Parsley.Net` is a .net utility to help parse `Fixed Width` or `Delimiter Separated` file using strongly typed objects.
-
-It is a simple and easy to use library that can be used to parse delimeter separated files in .net applications. It is designed to be lightweight and fast, making it ideal for use in high-performance applications.
+`Parsley.Net` is a .net utility to help parse `Fixed Width` or `Delimiter Separated` file using strongly typed objects.
+> It is a simple and easy to use library that can be used to parse delimeter separated files in .net applications. It is designed to be lightweight and fast, making it ideal for use in high-performance applications.
 
 ### What is Fixed width or Delimiter separated text file?
 `Fixed width` or `Delimiter separated` text file is a file that has a specific format which allows for the manipulation of textual information in an organized fashion.
