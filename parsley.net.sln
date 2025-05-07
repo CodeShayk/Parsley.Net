@@ -21,7 +21,6 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "github", "github", "{7CF3DC62-9D9D-4B56-869F-A3AB88B2DE6D}"
 	ProjectSection(SolutionItems) = preProject
 		.github\workflows\Master-Build.yml = .github\workflows\Master-Build.yml
-		.github\workflows\Master-CodeQL.yml = .github\workflows\Master-CodeQL.yml
 		.github\workflows\PullRequest-CI.yml = .github\workflows\PullRequest-CI.yml
 		.github\workflows\PullRequest-CodeQL.yml = .github\workflows\PullRequest-CodeQL.yml
 	EndProjectSection

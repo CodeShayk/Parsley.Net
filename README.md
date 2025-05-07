@@ -4,7 +4,6 @@
 [![GitHub Release](https://img.shields.io/github/v/release/CodeShayk/Parsley.Net?logo=github&sort=semver)](https://github.com/CodeShayk/Parsley.Net/releases/latest)
 [![Master-CodeQL](https://github.com/CodeShayk/Parsley.Net/actions/workflows/Master-CodeQL.yml/badge.svg)](https://github.com/CodeShayk/Parsley.Net/actions/workflows/Master-CodeQL.yml) 
 [![.Net 9.0](https://img.shields.io/badge/.Net-9.0-blue)](https://dotnet.microsoft.com/en-us/download/dotnet/9.0)
--------------
 
 ## Introduction
 ### What is Parsley.Net?
