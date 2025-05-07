@@ -10,6 +10,22 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{17C923C8
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Parsley.Tests", "tests\Parsley.Tests\Parsley.Tests.csproj", "{A85FB91B-8136-4686-95A9-E2527B91B2F6}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "misc", "misc", "{46D4E830-1AD4-489A-A7B4-BC2DB7AB1B27}"
+	ProjectSection(SolutionItems) = preProject
+		GitVersion.yml = GitVersion.yml
+		LICENSE = LICENSE
+		README.md = README.md
+		Parsley.md = Parsley.md
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "github", "github", "{7CF3DC62-9D9D-4B56-869F-A3AB88B2DE6D}"
+	ProjectSection(SolutionItems) = preProject
+		.github\workflows\Master-Build.yml = .github\workflows\Master-Build.yml
+		.github\workflows\Master-CodeQL.yml = .github\workflows\Master-CodeQL.yml
+		.github\workflows\PullRequest-CI.yml = .github\workflows\PullRequest-CI.yml
+		.github\workflows\PullRequest-CodeQL.yml = .github\workflows\PullRequest-CodeQL.yml
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -31,6 +47,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{318DEBE6-283F-4D1A-8FC8-34CDCF9EC36D} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 		{A85FB91B-8136-4686-95A9-E2527B91B2F6} = {17C923C8-15CA-42F6-A890-D5C2090FBB53}
+		{7CF3DC62-9D9D-4B56-869F-A3AB88B2DE6D} = {46D4E830-1AD4-489A-A7B4-BC2DB7AB1B27}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {4504A941-D269-4515-92C3-DA407304F44C}
