@@ -33,7 +33,7 @@ Install the latest version of Parsley.Net nuget package with command below.
 NuGet\Install-Package Parsley.Net 
 ```
 ### ii. Implementation: Using Parsley.Net
-#### Step 1. Initialise and use Parser class.
+#### <ins>Step 1<ins>. Initialise and use Parser class.
 `Parser` is an implementation of `IParser` interface that provides methods for 
 - parsing content of a file by specifying the file path
 - parsing an array of delimiter separated strings
@@ -63,7 +63,7 @@ services.UseParsley('|');
 serviceProvider = services.BuildServiceProvider();
 var parser = serviceProvider.GetService<IParser>();
 ```
-#### Step 2. Define the `IFileLine` implementation to parse a file record into a strongly typed line class.
+#### <ins>Step 2<ins>. Define the `IFileLine` implementation to parse a file record into a strongly typed line class.
 Consider the file below. To parse a row into a C# class, you need to implement `IFileLine` interface. By doing this you create a strongly typed line representation for each row in the file.
 ```
 |Mr|Jack Marias|Male|London|
@@ -124,7 +124,7 @@ ii. By providing the list of delimiter separated string values to parse method.
 
 var records = new Parser('|').Parse<Employee>(lines);
 ```
-#### Step 3. Advanced Parsing of data using nested types in the FileLine class.
+#### <ins>Step 3<ins>. Advanced Parsing of data using nested types in the FileLine class.
 You could implement advance parsing of data by implementing `TypeConverter` class. Suppose we have to change the Name string property in Employee class above to a `NameType` property shown below. 
 ```
 public class Employee : IFileLine
