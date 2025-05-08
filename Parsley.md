@@ -7,7 +7,7 @@ NuGet\Install-Package Parsley.Net
 
 ## Implementation: Using Parsley.Net
 ### Step 1. Initialise and use Parser class.
-`Parser` is and implementation of `IParser` interface that provides methods for 
+`Parser` is an implementation of `IParser` interface that provides methods for 
 - parsing content of a file by specifying the file path
 - parsing an array of delimiter separated strings
 
@@ -52,6 +52,7 @@ IFileLine interface provides
 - `Index` property that holds the index of the parsed line relative to the whole file,
 - `Errors` property which is an array representing any column parsing failures.
 
+Please see below.
 ```
 public interface IFileLine
 {
@@ -182,6 +183,6 @@ public class NameType
     }
 }
 ```
-Now parsing the file should hydrate data correctly to the FileLine class and its nested name type.
+Now parsing the file should hydrate data correctly to the Employee FileLine class and its nested name type.
 
 
