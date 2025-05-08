@@ -14,8 +14,16 @@ name: "master-codeql"
 on:
   push:
     branches: [ "master" ]
+    paths-ignore:
+    - "**/*.md"
+    - "**/*.gitignore"
+    - "**/*.gitattributes"
   pull_request:
     branches: [ "master" ]
+    paths-ignore:
+    - "**/*.md"
+    - "**/*.gitignore"
+    - "**/*.gitattributes"
   schedule:
     - cron: '42 7 * * 5'
 
