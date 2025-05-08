@@ -34,7 +34,7 @@ namespace Parsley.Tests
             Assert.That(parsed.Length, Is.EqualTo(2));
 
             Assert.That(parsed[0].Code, Is.EqualTo(1));
-            //Assert.That(parsed[0].Name, Is.EqualTo("Bob Marley"));
+            //Assert.That(parsed[0].NameType, Is.EqualTo("Bob Marley"));
             Assert.That(parsed[0].Name.FirstName, Is.EqualTo("Bob"));
             Assert.That(parsed[0].Name.Surname, Is.EqualTo("Marley"));
             Assert.That(parsed[0].IsActive, Is.EqualTo(true));
@@ -42,7 +42,7 @@ namespace Parsley.Tests
             Assert.That(parsed[0].Errors, Is.Empty);
 
             Assert.That(parsed[1].Code, Is.EqualTo(2));
-            //Assert.That(parsed[1].Name, Is.EqualTo("John Walsh"));
+            //Assert.That(parsed[1].NameType, Is.EqualTo("John Walsh"));
             Assert.That(parsed[1].Name.FirstName, Is.EqualTo("John Walsh"));
             Assert.That(parsed[1].Name.Surname, Is.EqualTo("McKinsey"));
             Assert.That(parsed[1].IsActive, Is.EqualTo(false));
@@ -66,7 +66,7 @@ namespace Parsley.Tests
             Assert.That(parsed.Length, Is.EqualTo(2));
 
             Assert.That(parsed[0].Code, Is.EqualTo(1));
-            //Assert.That(parsed[0].Name, Is.EqualTo("Bob Marley"));
+            //Assert.That(parsed[0].NameType, Is.EqualTo("Bob Marley"));
             Assert.That(parsed[0].Name.FirstName, Is.EqualTo("Bob"));
             Assert.That(parsed[0].Name.Surname, Is.EqualTo("Marley"));
             Assert.That(parsed[0].IsActive, Is.EqualTo(true));
@@ -74,7 +74,7 @@ namespace Parsley.Tests
             Assert.That(parsed[0].Errors, Is.Empty);
 
             Assert.That(parsed[1].Code, Is.EqualTo(2));
-            //Assert.That(parsed[1].Name, Is.EqualTo("John Walsh"));
+            //Assert.That(parsed[1].NameType, Is.EqualTo("John Walsh"));
             Assert.That(parsed[1].Name.FirstName, Is.EqualTo("John Walsh"));
             Assert.That(parsed[1].Name.Surname, Is.EqualTo("McKinsey"));
             Assert.That(parsed[1].IsActive, Is.EqualTo(false));

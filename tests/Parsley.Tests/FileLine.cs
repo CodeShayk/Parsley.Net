@@ -18,7 +18,7 @@ namespace Parsley.Tests
         public int Code { get; set; }
 
         [Column(1)]
-        public Name Name { get; set; }
+        public NameType Name { get; set; }
 
         [Column(2)]
         public bool IsActive { get; set; }
@@ -28,20 +28,20 @@ namespace Parsley.Tests
     }
 
     [TypeConverter(typeof(NameConverter))]
-    public class Name
+    public class NameType
     {
         public string FirstName { get; set; }
         public string Surname { get; set; }
 
-        public static Name Parse(string input)
+        public static NameType Parse(string input)
         {
             var values = input.Split(' ');
 
             if (values.Length == 1)
-                return new Name { FirstName = values[0] };
+                return new NameType { FirstName = values[0] };
 
             if (values.Length == 2)
-                return new Name { FirstName = values[0], Surname = values[1] };
+                return new NameType { FirstName = values[0], Surname = values[1] };
 
             if (values.Length > 2)
             {
@@ -49,10 +49,10 @@ namespace Parsley.Tests
                 for (var i = 0; i < values.Length - 1; i++)
                     forenames += string.Concat(values[i]) + " ";
 
-                return new Name { FirstName = forenames.Trim(), Surname = values[values.Length - 1] };
+                return new NameType { FirstName = forenames.Trim(), Surname = values[values.Length - 1] };
             }
 
-            return new Name { FirstName = input };
+            return new NameType { FirstName = input };
         }
     }
 
@@ -73,7 +73,7 @@ namespace Parsley.Tests
 
             if (!string.IsNullOrEmpty(stringValue))
             {
-                result = Name.Parse(stringValue);
+                result = NameType.Parse(stringValue);
             }
 
             return result ?? base.ConvertFrom(context, culture, value);
