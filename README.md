@@ -272,7 +272,7 @@ This project is licensed with the [MIT license](LICENSE).
 The main branch is now on .NET 9.0. 
 | Version  | Release Notes |
 | -------- | --------|
-| [`v1.0.0`](https://github.com/CodeShayk/parsley.net/tree/release/v1.0) |  [Notes](https://github.com/CodeShayk/Parsley.Net/releases/tag/v1.0.0) |
+| [`v1.0.0`](https://github.com/CodeShayk/parsley.net/tree/v1.0.0) |  [Notes](https://github.com/CodeShayk/Parsley.Net/releases/tag/v1.0.0) |
 
 ## Credits
 Thank you for reading. Please fork, explore, contribute and report. Happy Coding !! :)
