@@ -2,6 +2,6 @@ namespace parsley
 {
     public interface ICustomType
     {
-        ICustomType Parse(string column);
+        public ICustomType Parse(string column);
     }
 }
