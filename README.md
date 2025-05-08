@@ -248,12 +248,12 @@ public class LocationType : ICustomType
     {
         var values = input.Split(',');
         if (values.Length == 1)
-            return new LocationType { City = values[0] };
+            return new LocationType { City=values[0] };
         if (values.Length == 2)
-            return new LocationType { City = values[0], Country = values[1] };
+            return new LocationType { City=values[0], Country=values[1] };
 
        // return default - London, UK
-        return new LocationType { City = "London", Country ="UK" };
+        return new LocationType { City="London", Country="UK" };
     }
 }
 ```
