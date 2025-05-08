@@ -152,7 +152,7 @@ public class NameType
 
 In order to parse the string value (name) from delimiter separated record in the file correctly to custom type (NameType), you need to implement custom converter deriving from `TypeConverter` class.
 
-Example - `NameConverter` class - converts the string into NameType type
+Example - `NameConverter` class - converts name string value to NameType instance
 ```
 public class NameConverter : TypeConverter
 {
