@@ -244,7 +244,7 @@ public class LocationType : ICustomType
     public string City { get; set; }
     public string Country { get; set; }
 
-    public static LocationType Parse(string input)
+    public ICustomType Parse(string input)
     {
         var values = input.Split(',');
         if (values.Length == 1)
