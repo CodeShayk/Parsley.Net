@@ -19,8 +19,8 @@
 
 Example: Simple pipe '|' separated Delimeter File is shown below (this could even be comma ',' separated CSV)
 ```
-|Mr|Jack Marias|Male|London|Active|||
-|Dr|Bony Stringer|Male|New Jersey|Active||Paid|
+|Mr|Jack Marias|Male|London, UK|Active|||
+|Dr|Bony Stringer|Male|New Jersey, US|Active||Paid|
 |Mrs|Mary Ward|Female||Active|||
 |Mr|Robert Webb|||Active|||
 ```
@@ -66,8 +66,8 @@ var parser = serviceProvider.GetService<IParser>();
 #### <ins>Step 2<ins>. Define the `IFileLine` implementation to parse a file record into a strongly typed line class.
 Consider the file below. To parse a row into a C# class, you need to implement `IFileLine` interface. By doing this you create a strongly typed line representation for each row in the file.
 ```
-|Mr|Jack Marias|Male|London|
-|Dr|Bony Stringer|Male|New Jersey|
+|Mr|Jack Marias|Male|London, UK|
+|Dr|Bony Stringer|Male|New Jersey, US|
 |Mrs|Mary Ward|Female||
 |Mr|Robert Webb|||
 ```
@@ -100,7 +100,7 @@ public class Employee : IFileLine
     public string Name { get; set; }
     [Column(2)]
     public EnumGender Sex { get; set; }
-    [Column(3, "London")]
+    [Column(3, "London, UK")]
     public string Location { get; set; }
 
     // IFileLine Members
@@ -118,13 +118,16 @@ ii. By providing the list of delimiter separated string values to parse method.
 ```
  var lines = new[]
  {
-      "|Mr|Jack Marias|Male|London|",
-      "|Dr|Bony Stringer|Male|New Jersey|",
+      "|Mr|Jack Marias|Male|London, UK|",
+      "|Dr|Bony Stringer|Male|New Jersey, US|",
  };
 
 var records = new Parser('|').Parse<Employee>(lines);
 ```
 #### <ins>Step 3<ins>. Advanced Parsing of data using nested types in the FileLine class.
+
+**Case 1**: Write your own Custom Converter to parse data to a custom type.
+
 You could implement advance parsing of data by implementing `TypeConverter` class. Suppose we have to change the Name string property in Employee class above to a `NameType` property shown below. 
 ```
 public class Employee : IFileLine
@@ -210,7 +213,52 @@ public class NameType
     }
 }
 ```
-Now parsing the file should hydrate data correctly to the Employee FileLine class and its nested name type.
+Now parsing the file should hydrate the name correctly to the Employee FileLine class with nested name type.
+
+**Case 2**: Use `CustomeConverter<T>` included with Parsely, where `T` is the custom type. 
+
+Please see example below on how out of the box converter can be used in defining custom `LocationType` class to include in Employee line class. 
+```
+public class Employee : IFileLine
+{
+    [Column(0)]
+    public string Title { get; set; }
+    [Column(1)]
+    public NameType Name { get; set; }
+    [Column(2)]
+    public EnumGender Sex { get; set; }
+    [Column(3, "London, UK")]
+    public LocationType Location { get; set; }
+
+    // IFileLine Members
+    public int Index { get; set; }
+    public IList<string> Errors { get; set; }
+}
+```
+You need to derive the custom `LocationType` type from `ICustomType` and implement the `Parse(string)` method.
+You also need to decorate the custom type with ` [TypeConverter(typeof(CustomConverter<LocationType>))]` attribute.
+```
+[TypeConverter(typeof(CustomConverter<LocationType>))]
+public class LocationType : ICustomType
+{
+    public string City { get; set; }
+    public string Country { get; set; }
+
+    public static LocationType Parse(string input)
+    {
+        var values = input.Split(',');
+        if (values.Length == 1)
+            return new LocationType { City = values[0] };
+        if (values.Length == 2)
+            return new LocationType { City = values[0], Country = values[1] };
+
+       // return default - London, UK
+        return new LocationType { City = "London", Country ="UK" };
+    }
+}
+```
+Now parsing the file should hydrate the location value correctly to the Employee FileLine class with nested LocationType type.
+
 
 ## Support
 
