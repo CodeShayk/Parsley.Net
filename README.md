@@ -1,9 +1,11 @@
-# <img src="https://github.com/CodeShayk/parsley.net/blob/master/Images/ninja-icon-16.png" alt="ninja" style="width:30px;"/>  Parsley.Net v1.0.0
+# <img src="https://github.com/CodeShayk/parsley.net/blob/master/Images/ninja-icon-16.png" alt="ninja" style="width:30px;"/> Parsley.Net v1.0.1
 [![NuGet version](https://badge.fury.io/nu/Parsley.Net.svg)](https://badge.fury.io/nu/Parsley.Net) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/CodeShayk/Parsley.Net/blob/master/LICENSE.md) 
 [![GitHub Release](https://img.shields.io/github/v/release/CodeShayk/Parsley.Net?logo=github&sort=semver)](https://github.com/CodeShayk/Parsley.Net/releases/latest)
 [![master-build](https://github.com/CodeShayk/parsley.net/actions/workflows/Master-Build.yml/badge.svg)](https://github.com/CodeShayk/parsley.net/actions/workflows/Master-Build.yml)
 [![master-codeql](https://github.com/CodeShayk/parsley.net/actions/workflows/Master-CodeQL.yml/badge.svg)](https://github.com/CodeShayk/parsley.net/actions/workflows/Master-CodeQL.yml)
 [![.Net 9.0](https://img.shields.io/badge/.Net-9.0-blue)](https://dotnet.microsoft.com/en-us/download/dotnet/9.0)
+[![.Net Framework 4.6.4](https://img.shields.io/badge/.Net-4.6.2-blue)](https://dotnet.microsoft.com/en-us/download/dotnet-framework/net46)
+[![.Net Standard 2.0](https://img.shields.io/badge/.NetStandard-2.0-blue)](https://github.com/dotnet/standard/blob/v2.0.0/docs/versions/netstandard2.0.md)
 
 ## Introduction
 ### What is Parsley.Net?

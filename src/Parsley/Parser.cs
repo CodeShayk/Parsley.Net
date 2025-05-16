@@ -1,5 +1,10 @@
+using System;
+using System.Collections.Generic;
 using System.ComponentModel;
+using System.IO;
+using System.Linq;
 using System.Reflection;
+using System.Threading.Tasks;
 
 namespace parsley
 {
@@ -19,7 +24,7 @@ namespace parsley
         public T[] Parse<T>(string filepath) where T : IFileLine, new()
         {
             if (string.IsNullOrEmpty(filepath) || !File.Exists(filepath))
-                return [];
+                return Array.Empty<T>();
 
             var lines = ReadToLines(filepath);
 
@@ -29,7 +34,8 @@ namespace parsley
         public T[] Parse<T>(string[] lines) where T : IFileLine, new()
         {
             if (lines == null || lines.Length == 0)
-                return [];
+                return Array.Empty<T>();
+            ;
 
             var list = new T[lines.Length];
 
@@ -70,7 +76,7 @@ namespace parsley
                     lines.Add(line);
             }
 
-            return lines.ToArray();
+            return lines.ToArray<string>();
         }
 
         private T ParseLine<T>(string line) where T : IFileLine, new()
