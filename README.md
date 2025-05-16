@@ -4,7 +4,7 @@
 [![master-build](https://github.com/CodeShayk/parsley.net/actions/workflows/Master-Build.yml/badge.svg)](https://github.com/CodeShayk/parsley.net/actions/workflows/Master-Build.yml)
 [![master-codeql](https://github.com/CodeShayk/parsley.net/actions/workflows/Master-CodeQL.yml/badge.svg)](https://github.com/CodeShayk/parsley.net/actions/workflows/Master-CodeQL.yml)
 [![.Net 9.0](https://img.shields.io/badge/.Net-9.0-blue)](https://dotnet.microsoft.com/en-us/download/dotnet/9.0)
-[![.Net Framework 4.6.4](https://img.shields.io/badge/.Net-4.6.4-blue)](https://dotnet.microsoft.com/en-us/download/dotnet-framework/net46)
+[![.Net Framework 4.6.4](https://img.shields.io/badge/.Net-4.6.2-blue)](https://dotnet.microsoft.com/en-us/download/dotnet-framework/net46)
 [![.Net Standard 2.0](https://img.shields.io/badge/.NetStandard-2.0-blue)](https://github.com/dotnet/standard/blob/v2.0.0/docs/versions/netstandard2.0.md)
 
 ## Introduction
