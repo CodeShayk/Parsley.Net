@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace parsley
 {
     internal static class Extensions

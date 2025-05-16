@@ -1,8 +1,10 @@
+using System.Collections.Generic;
+
 namespace parsley
 {
     public interface IFileLine
     {
-        public int Index { get; set; }
-        public IList<string> Errors { get; set; }
+        int Index { get; set; }
+        IList<string> Errors { get; set; }
     }
 }

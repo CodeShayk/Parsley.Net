@@ -1,3 +1,5 @@
+using System;
+
 namespace parsley
 {
     public class ColumnAttribute : Attribute

@@ -1,9 +1,10 @@
+using System;
 using System.ComponentModel;
 using System.Globalization;
 
 namespace parsley
 {
-    public class CustomConverter<T> : TypeConverter where T: ICustomType, new()
+    public class CustomConverter<T> : TypeConverter where T : ICustomType, new()
     {
         public override bool CanConvertFrom(ITypeDescriptorContext context, Type sourceType)
         {
