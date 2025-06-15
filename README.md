@@ -337,6 +337,7 @@ The main branch is now on .NET 9.0.
 | Version  | Release Notes |
 | -------- | --------|
 | [`v1.0.0`](https://github.com/CodeShayk/parsley.net/tree/v1.0.0) |  [Notes](https://github.com/CodeShayk/Parsley.Net/releases/tag/v1.0.0) |
+| [`v1.1.0`](https://github.com/CodeShayk/parsley.net/tree/v1.1.0) |  [Notes](https://github.com/CodeShayk/Parsley.Net/releases/tag/v1.1.0) |
 
 ## Credits
 Thank you for reading. Please fork, explore, contribute and report. Happy Coding !! :)
