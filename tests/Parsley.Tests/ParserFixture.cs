@@ -1,6 +1,7 @@
 using parsley;
 using Microsoft.Extensions.DependencyInjection;
 using Parsley.Tests.FileLines;
+using System.Text;
 
 namespace Parsley.Tests
 {
@@ -120,6 +121,194 @@ namespace Parsley.Tests
             result = parser.Parse<InvalidFileLine>(new[] { "edndx|true" });
 
             Assert.That(result[0].Errors, Is.Not.Empty);
+        }
+
+        [Test]
+        public void TestParseWithStreamInputShouldReturnCorrectlyParsedArray()
+        {
+            var lines = new[]
+            {
+                 "GB-01|Bob Marley|True|Free",
+                 "UH-02|John Walsh McKinsey|False|Paid"
+             };
+
+            parser = new Parser('|');
+
+            var parsed = parser.Parse<FileLine>(new MemoryStream(Encoding.UTF8.GetBytes(string.Join(Environment.NewLine, lines))));
+
+            Assert.That(parsed.Length, Is.EqualTo(2));
+
+            Assert.That(parsed[0].Code.Batch, Is.EqualTo("GB"));
+            Assert.That(parsed[0].Code.SerialNo, Is.EqualTo(1));
+            Assert.That(parsed[0].Name.FirstName, Is.EqualTo("Bob"));
+            Assert.That(parsed[0].Name.Surname, Is.EqualTo("Marley"));
+            Assert.That(parsed[0].IsActive, Is.EqualTo(true));
+            Assert.That(parsed[0].Subcription, Is.EqualTo(Subcription.Free));
+            Assert.That(parsed[0].Errors, Is.Empty);
+
+            Assert.That(parsed[1].Code.Batch, Is.EqualTo("UH"));
+            Assert.That(parsed[1].Code.SerialNo, Is.EqualTo(2));
+            Assert.That(parsed[1].Name.FirstName, Is.EqualTo("John Walsh"));
+            Assert.That(parsed[1].Name.Surname, Is.EqualTo("McKinsey"));
+            Assert.That(parsed[1].IsActive, Is.EqualTo(false));
+            Assert.That(parsed[1].Subcription, Is.EqualTo(Subcription.Paid));
+            Assert.That(parsed[1].Errors, Is.Empty);
+        }
+
+        [Test]
+        public void TestParseWithByteArrayInputShouldReturnCorrectlyParsedArray()
+        {
+            var lines = new[]
+            {
+                 "GB-01|Bob Marley|True|Free",
+                 "UH-02|John Walsh McKinsey|False|Paid"
+             };
+
+            parser = new Parser('|');
+
+            var parsed = parser.Parse<FileLine>(Encoding.UTF8.GetBytes(string.Join(Environment.NewLine, lines)));
+
+            Assert.That(parsed.Length, Is.EqualTo(2));
+
+            Assert.That(parsed[0].Code.Batch, Is.EqualTo("GB"));
+            Assert.That(parsed[0].Code.SerialNo, Is.EqualTo(1));
+            Assert.That(parsed[0].Name.FirstName, Is.EqualTo("Bob"));
+            Assert.That(parsed[0].Name.Surname, Is.EqualTo("Marley"));
+            Assert.That(parsed[0].IsActive, Is.EqualTo(true));
+            Assert.That(parsed[0].Subcription, Is.EqualTo(Subcription.Free));
+            Assert.That(parsed[0].Errors, Is.Empty);
+
+            Assert.That(parsed[1].Code.Batch, Is.EqualTo("UH"));
+            Assert.That(parsed[1].Code.SerialNo, Is.EqualTo(2));
+            Assert.That(parsed[1].Name.FirstName, Is.EqualTo("John Walsh"));
+            Assert.That(parsed[1].Name.Surname, Is.EqualTo("McKinsey"));
+            Assert.That(parsed[1].IsActive, Is.EqualTo(false));
+            Assert.That(parsed[1].Subcription, Is.EqualTo(Subcription.Paid));
+            Assert.That(parsed[1].Errors, Is.Empty);
+        }
+
+        [Test]
+        public async Task TestParseAsyncWithFilePathShouldReturnCorrectlyParsedArray()
+        {
+            var filePath = Path.Combine(Environment.CurrentDirectory, "TestFile.txt");
+
+            parser = new Parser();
+
+            var parsed = await parser.ParseAsync<FileLine>(filePath);
+
+            Assert.That(parsed.Length, Is.EqualTo(2));
+
+            Assert.That(parsed[0].Code.Batch, Is.EqualTo("GB"));
+            Assert.That(parsed[0].Code.SerialNo, Is.EqualTo(1));
+            Assert.That(parsed[0].Name.FirstName, Is.EqualTo("Bob"));
+            Assert.That(parsed[0].Name.Surname, Is.EqualTo("Marley"));
+            Assert.That(parsed[0].IsActive, Is.EqualTo(true));
+            Assert.That(parsed[0].Subcription, Is.EqualTo(Subcription.Free));
+            Assert.That(parsed[0].Errors, Is.Empty);
+
+            Assert.That(parsed[1].Code.Batch, Is.EqualTo("UG"));
+            Assert.That(parsed[1].Code.SerialNo, Is.EqualTo(2));
+            Assert.That(parsed[1].Name.FirstName, Is.EqualTo("John Walsh"));
+            Assert.That(parsed[1].Name.Surname, Is.EqualTo("McKinsey"));
+            Assert.That(parsed[1].IsActive, Is.EqualTo(false));
+            Assert.That(parsed[1].Subcription, Is.EqualTo(Subcription.Paid));
+            Assert.That(parsed[1].Errors, Is.Empty);
+        }
+
+        [Test]
+        public async Task TestParseAsyncWithStringArrayInputShouldReturnCorrectlyParsedArray()
+        {
+            var lines = new[]
+            {
+                 "GB-01|Bob Marley|True|Free",
+                 "UH-02|John Walsh McKinsey|False|Paid"
+             };
+
+            parser = new Parser('|');
+
+            var parsed = await parser.ParseAsync<FileLine>(lines);
+
+            Assert.That(parsed.Length, Is.EqualTo(2));
+
+            Assert.That(parsed[0].Code.Batch, Is.EqualTo("GB"));
+            Assert.That(parsed[0].Code.SerialNo, Is.EqualTo(1));
+            Assert.That(parsed[0].Name.FirstName, Is.EqualTo("Bob"));
+            Assert.That(parsed[0].Name.Surname, Is.EqualTo("Marley"));
+            Assert.That(parsed[0].IsActive, Is.EqualTo(true));
+            Assert.That(parsed[0].Subcription, Is.EqualTo(Subcription.Free));
+            Assert.That(parsed[0].Errors, Is.Empty);
+
+            Assert.That(parsed[1].Code.Batch, Is.EqualTo("UH"));
+            Assert.That(parsed[1].Code.SerialNo, Is.EqualTo(2));
+            Assert.That(parsed[1].Name.FirstName, Is.EqualTo("John Walsh"));
+            Assert.That(parsed[1].Name.Surname, Is.EqualTo("McKinsey"));
+            Assert.That(parsed[1].IsActive, Is.EqualTo(false));
+            Assert.That(parsed[1].Subcription, Is.EqualTo(Subcription.Paid));
+            Assert.That(parsed[1].Errors, Is.Empty);
+        }
+
+        [Test]
+        public async Task TestParseAsyncWithStreamInputShouldReturnCorrectlyParsedArray()
+        {
+            var lines = new[]
+            {
+                 "GB-01|Bob Marley|True|Free",
+                 "UH-02|John Walsh McKinsey|False|Paid"
+             };
+
+            parser = new Parser('|');
+
+            var parsed = await parser.ParseAsync<FileLine>(new MemoryStream(Encoding.UTF8.GetBytes(string.Join(Environment.NewLine, lines))));
+
+            Assert.That(parsed.Length, Is.EqualTo(2));
+
+            Assert.That(parsed[0].Code.Batch, Is.EqualTo("GB"));
+            Assert.That(parsed[0].Code.SerialNo, Is.EqualTo(1));
+            Assert.That(parsed[0].Name.FirstName, Is.EqualTo("Bob"));
+            Assert.That(parsed[0].Name.Surname, Is.EqualTo("Marley"));
+            Assert.That(parsed[0].IsActive, Is.EqualTo(true));
+            Assert.That(parsed[0].Subcription, Is.EqualTo(Subcription.Free));
+            Assert.That(parsed[0].Errors, Is.Empty);
+
+            Assert.That(parsed[1].Code.Batch, Is.EqualTo("UH"));
+            Assert.That(parsed[1].Code.SerialNo, Is.EqualTo(2));
+            Assert.That(parsed[1].Name.FirstName, Is.EqualTo("John Walsh"));
+            Assert.That(parsed[1].Name.Surname, Is.EqualTo("McKinsey"));
+            Assert.That(parsed[1].IsActive, Is.EqualTo(false));
+            Assert.That(parsed[1].Subcription, Is.EqualTo(Subcription.Paid));
+            Assert.That(parsed[1].Errors, Is.Empty);
+        }
+
+        [Test]
+        public async Task TestParseAsyncWithByteArrayInputShouldReturnCorrectlyParsedArray()
+        {
+            var lines = new[]
+            {
+                 "GB-01|Bob Marley|True|Free",
+                 "UH-02|John Walsh McKinsey|False|Paid"
+             };
+
+            parser = new Parser('|');
+
+            var parsed = await parser.ParseAsync<FileLine>(Encoding.UTF8.GetBytes(string.Join(Environment.NewLine, lines)));
+
+            Assert.That(parsed.Length, Is.EqualTo(2));
+
+            Assert.That(parsed[0].Code.Batch, Is.EqualTo("GB"));
+            Assert.That(parsed[0].Code.SerialNo, Is.EqualTo(1));
+            Assert.That(parsed[0].Name.FirstName, Is.EqualTo("Bob"));
+            Assert.That(parsed[0].Name.Surname, Is.EqualTo("Marley"));
+            Assert.That(parsed[0].IsActive, Is.EqualTo(true));
+            Assert.That(parsed[0].Subcription, Is.EqualTo(Subcription.Free));
+            Assert.That(parsed[0].Errors, Is.Empty);
+
+            Assert.That(parsed[1].Code.Batch, Is.EqualTo("UH"));
+            Assert.That(parsed[1].Code.SerialNo, Is.EqualTo(2));
+            Assert.That(parsed[1].Name.FirstName, Is.EqualTo("John Walsh"));
+            Assert.That(parsed[1].Name.Surname, Is.EqualTo("McKinsey"));
+            Assert.That(parsed[1].IsActive, Is.EqualTo(false));
+            Assert.That(parsed[1].Subcription, Is.EqualTo(Subcription.Paid));
+            Assert.That(parsed[1].Errors, Is.Empty);
         }
     }
 }

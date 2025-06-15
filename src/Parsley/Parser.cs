@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace parsley
@@ -162,6 +163,95 @@ namespace parsley
                 .Select(x => !string.IsNullOrWhiteSpace(x) ? x.Trim() : x)
                 .ToArray();
             return values;
+        }
+
+        public T[] Parse<T>(Stream stream) where T : IFileLine, new()
+        {
+            if (stream == null || stream.Length == 0)
+                return Array.Empty<T>();
+
+            var lines = new List<string>();
+            using (var reader = new StreamReader(stream, Encoding.UTF8))
+            {
+                string line;
+                while ((line = reader.ReadLine()) != null)
+                {
+                    var trimmedLine = line.Trim();
+                    if (!string.IsNullOrWhiteSpace(trimmedLine))
+                        lines.Add(trimmedLine);
+                    line = null;
+                }
+            }
+
+            return lines.Any() ? Parse<T>(lines.ToArray()) : Array.Empty<T>();
+        }
+
+        public T[] Parse<T>(byte[] bytes) where T : IFileLine, new()
+        {
+            if (bytes == null || bytes.Length == 0)
+                return Array.Empty<T>();
+
+            return Parse<T>(new MemoryStream(bytes));
+        }
+
+        public async Task<T[]> ParseAsync<T>(string filepath) where T : IFileLine, new()
+        {
+            if (string.IsNullOrEmpty(filepath) || !File.Exists(filepath))
+                return Array.Empty<T>();
+
+            var lines = await Task.Run(() => ReadToLines(filepath));
+
+            return await ParseAsync<T>(lines);
+        }
+
+        public async Task<T[]> ParseAsync<T>(string[] lines) where T : IFileLine, new()
+        {
+            if (lines == null || lines.Length == 0)
+                return Array.Empty<T>();
+
+            var list = new T[lines.Length];
+            var index = 0;
+            var inputs = lines.Select(line => new { Line = line, Index = index++ });
+
+            foreach (var input in inputs)
+            {
+                if (string.IsNullOrWhiteSpace(input.Line))
+                    continue;
+
+                var parsedLine = await Task.Run(() => ParseLine<T>(input.Line));
+
+                if (parsedLine != null)
+                {
+                    parsedLine.Index = input.Index;
+                    list[parsedLine.Index] = parsedLine;
+                }
+            }
+            return list;
+        }
+
+        public async Task<T[]> ParseAsync<T>(Stream stream) where T : IFileLine, new()
+        {
+            var lines = new List<string>();
+            using (var reader = new StreamReader(stream, Encoding.UTF8))
+            {
+                string line;
+                while ((line = await reader.ReadLineAsync()) != null)
+                {
+                    var trimmedLine = line.Trim();
+                    if (!string.IsNullOrWhiteSpace(trimmedLine))
+                        lines.Add(trimmedLine);
+                }
+            }
+
+            return lines.Any() ? await ParseAsync<T>(lines.ToArray()) : Array.Empty<T>();
+        }
+
+        public async Task<T[]> ParseAsync<T>(byte[] bytes) where T : IFileLine, new()
+        {
+            if (bytes == null || bytes.Length == 0)
+                return Array.Empty<T>();
+
+            return await ParseAsync<T>(new MemoryStream(bytes));
         }
     }
 }

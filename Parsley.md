@@ -15,8 +15,15 @@ Please see below.
 ```
   public interface IParser
   {
-     public T[] Parse<T>(string filepath) where T : IFileLine, new();
-     public T[] Parse<T>(string[] lines) where T : IFileLine, new();
+     T[] Parse<T>(string filepath) where T : IFileLine, new();
+     T[] Parse<T>(string[] lines) where T : IFileLine, new();
+     T[] Parse<T>(Stream stream) where T : IFileLine, new();
+     T[] Parse<T>(byte[] bytes) where T : IFileLine, new();
+
+     T[] ParseAsync<T>(string filepath) where T : IFileLine, new();
+     T[] ParseAsync<T>(string[] lines) where T : IFileLine, new();
+     T[] ParseAsync<T>(Stream stream) where T : IFileLine, new();
+     T[] ParseAsync<T>(byte[] bytes) where T : IFileLine, new();
   }
 ```
 To initialise `Parser` class you could do it manually or use dependency injection as shown below. The parser class has parameterised constructor that takes the delimiter character to initialise the instance. Default character is ',' (comma) to initialise the parser for a CSV file parsing.

@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net462; netstandard2.0;netstandard2.1; net9.0</TargetFrameworks>
+    <TargetFrameworks>net462;netstandard2.0;netstandard2.1;net9.0</TargetFrameworks>
     <ImplicitUsings>disable</ImplicitUsings>
     <Title>Parsley.Net</Title>
     <Authors>CodeShayk</Authors>
@@ -20,9 +20,10 @@
     <PackageProjectUrl>https://github.com/CodeShayk/Parsley.Net/wiki</PackageProjectUrl>
     <RepositoryUrl>https://github.com/CodeShayk/Parsley.Net</RepositoryUrl>
     <PackageReleaseNotes>
-      v1.0.1 - Targets .Net9.0, .NetStandard2.1, .NetStandard2.0, and .NetFramework4.6.4. <br/>
-* Includes core functionality for parsing delimiter separated files.</PackageReleaseNotes>
-    <Version>1.0.1</Version>
+      v1.1.0 - Targets .Net9.0, .NetStandard2.1, .NetStandard2.0, and .NetFramework4.6.4. <br/>
+* Includes core functionality for parsing delimiter separated files.
+* Provided Sync and Async parsing methods</PackageReleaseNotes>
+    <Version>1.1.0</Version>
     <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
     <AssemblyName>Parsley.Net</AssemblyName>
   </PropertyGroup>
