@@ -1,4 +1,5 @@
 using System.IO;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace parsley
@@ -22,20 +23,20 @@ namespace parsley
         T[] Parse<T>(string[] lines) where T : IFileLine, new();
 
         /// <summary>
-        /// Parses a stream of delimiter separated records into an array of objects of type T.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="stream"></param>
-        /// <returns></returns>
-        T[] Parse<T>(Stream stream) where T : IFileLine, new();
-
-        /// <summary>
         /// Parses an array of bytes of delimiter separated records into an array of objects of type T.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="bytes"></param>
         /// <returns></returns>
-        T[] Parse<T>(byte[] bytes) where T : IFileLine, new();
+        T[] Parse<T>(byte[] bytes, Encoding encoding = null) where T : IFileLine, new();
+
+        /// <summary>
+        /// Parses a stream of delimiter separated records into an array of objects of type T.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="stream"></param>
+        /// <returns></returns>
+        T[] Parse<T>(Stream stream, Encoding encoding = null) where T : IFileLine, new();
 
         /// <summary>
         /// Asynchronously parses a file at the specified filepath into an array of objects of type T.
@@ -54,19 +55,19 @@ namespace parsley
         Task<T[]> ParseAsync<T>(string[] lines) where T : IFileLine, new();
 
         /// <summary>
-        /// Asynchronously parses a stream of delimiter separated strings into an array of objects of type T.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="stream"></param>
-        /// <returns></returns>
-        Task<T[]> ParseAsync<T>(Stream stream) where T : IFileLine, new();
-
-        /// <summary>
         /// Asynchronously parses an array of bytes of delimiter separated records into an array of objects of type T.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="bytes"></param>
         /// <returns></returns>
-        Task<T[]> ParseAsync<T>(byte[] bytes) where T : IFileLine, new();
+        Task<T[]> ParseAsync<T>(byte[] bytes, Encoding encoding = null) where T : IFileLine, new();
+
+        /// <summary>
+        /// Asynchronously parses a stream of delimiter separated strings into an array of objects of type T.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="stream"></param>
+        /// <returns></returns>
+        Task<T[]> ParseAsync<T>(Stream stream, Encoding encoding = null) where T : IFileLine, new();
     }
 }

@@ -19,11 +19,8 @@
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
     <PackageProjectUrl>https://github.com/CodeShayk/Parsley.Net/wiki</PackageProjectUrl>
     <RepositoryUrl>https://github.com/CodeShayk/Parsley.Net</RepositoryUrl>
-    <PackageReleaseNotes>
-      v1.1.0 - Targets .Net9.0, .NetStandard2.1, .NetStandard2.0, and .NetFramework4.6.4. <br/>
-* Includes core functionality for parsing delimiter separated files.
-* Provided Sync and Async parsing methods</PackageReleaseNotes>
-    <Version>1.1.0</Version>
+    <PackageReleaseNotes>v1.1.5 - performance improvements in async parsing.</PackageReleaseNotes>
+    <Version>1.1.5</Version>
     <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
     <AssemblyName>Parsley.Net</AssemblyName>
   </PropertyGroup>
