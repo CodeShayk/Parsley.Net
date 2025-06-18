@@ -39,7 +39,7 @@ namespace Parsley.Tests
         }
 
         [Test]
-        public void TestParseWithFileInputShouldReturnCorrectlyParsedArray()
+        public void TestParseWithFilePathShouldReturnCorrectlyParsedArray()
         {
             var filePath = Path.Combine(Environment.CurrentDirectory, "TestFile.txt");
 
@@ -221,14 +221,15 @@ namespace Parsley.Tests
             var lines = new[]
             {
                  "GB-01|Bob Marley|True|Free",
-                 "UH-02|John Walsh McKinsey|False|Paid"
+                 "UH-02|John Walsh McKinsey|False|Paid",
+                 "UH-03|Fred Wigg|False|Paid",
              };
 
             parser = new Parser('|');
 
             var parsed = await parser.ParseAsync<FileLine>(lines);
 
-            Assert.That(parsed.Length, Is.EqualTo(2));
+            Assert.That(parsed.Length, Is.EqualTo(3));
 
             Assert.That(parsed[0].Code.Batch, Is.EqualTo("GB"));
             Assert.That(parsed[0].Code.SerialNo, Is.EqualTo(1));

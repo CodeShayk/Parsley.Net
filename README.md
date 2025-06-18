@@ -1,4 +1,4 @@
-# <img src="https://github.com/CodeShayk/parsley.net/blob/master/Images/ninja-icon-16.png" alt="ninja" style="width:30px;"/> Parsley.Net v1.1.0
+# <img src="https://github.com/CodeShayk/parsley.net/blob/master/Images/ninja-icon-16.png" alt="ninja" style="width:30px;"/> Parsley.Net v1.1.5
 [![NuGet version](https://badge.fury.io/nu/Parsley.Net.svg)](https://badge.fury.io/nu/Parsley.Net) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/CodeShayk/Parsley.Net/blob/master/LICENSE.md) 
 [![GitHub Release](https://img.shields.io/github/v/release/CodeShayk/Parsley.Net?logo=github&sort=semver)](https://github.com/CodeShayk/Parsley.Net/releases/latest)
 [![master-build](https://github.com/CodeShayk/parsley.net/actions/workflows/Master-Build.yml/badge.svg)](https://github.com/CodeShayk/parsley.net/actions/workflows/Master-Build.yml)
@@ -44,9 +44,9 @@ NuGet\Install-Package Parsley.Net
 
 Please see below.
 ```
-  public interface IParser
-  {
-             /// <summary>
+ public interface IParser
+    {
+        /// <summary>
         /// Parses a file at the specified filepath into an array of objects of type T.
         /// </summary>
         /// <typeparam name="T"></typeparam>
@@ -63,20 +63,20 @@ Please see below.
         T[] Parse<T>(string[] lines) where T : IFileLine, new();
 
         /// <summary>
-        /// Parses a stream of delimiter separated records into an array of objects of type T.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="stream"></param>
-        /// <returns></returns>
-        T[] Parse<T>(Stream stream) where T : IFileLine, new();
-
-        /// <summary>
         /// Parses an array of bytes of delimiter separated records into an array of objects of type T.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="bytes"></param>
         /// <returns></returns>
-        T[] Parse<T>(byte[] bytes) where T : IFileLine, new();
+        T[] Parse<T>(byte[] bytes, Encoding encoding = null) where T : IFileLine, new();
+
+        /// <summary>
+        /// Parses a stream of delimiter separated records into an array of objects of type T.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="stream"></param>
+        /// <returns></returns>
+        T[] Parse<T>(Stream stream, Encoding encoding = null) where T : IFileLine, new();
 
         /// <summary>
         /// Asynchronously parses a file at the specified filepath into an array of objects of type T.
@@ -95,20 +95,21 @@ Please see below.
         Task<T[]> ParseAsync<T>(string[] lines) where T : IFileLine, new();
 
         /// <summary>
-        /// Asynchronously parses a stream of delimiter separated strings into an array of objects of type T.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="stream"></param>
-        /// <returns></returns>
-        Task<T[]> ParseAsync<T>(Stream stream) where T : IFileLine, new();
-        /// <summary>
         /// Asynchronously parses an array of bytes of delimiter separated records into an array of objects of type T.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="bytes"></param>
         /// <returns></returns>
-        Task<T[]> ParseAsync<T>(byte[] bytes) where T : IFileLine, new();
-  }
+        Task<T[]> ParseAsync<T>(byte[] bytes, Encoding encoding = null) where T : IFileLine, new();
+
+        /// <summary>
+        /// Asynchronously parses a stream of delimiter separated strings into an array of objects of type T.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="stream"></param>
+        /// <returns></returns>
+        Task<T[]> ParseAsync<T>(Stream stream, Encoding encoding = null) where T : IFileLine, new();
+    }
 ```
 To initialise `Parser` class you could do it manually or use dependency injection as shown below. The parser class has parameterised constructor that takes the delimiter character to initialise the instance. Default character is ',' (comma) to initialise the parser for a CSV file parsing.
 
@@ -338,6 +339,7 @@ The main branch is now on .NET 9.0.
 | -------- | --------|
 | [`v1.0.0`](https://github.com/CodeShayk/parsley.net/tree/v1.0.0) |  [Notes](https://github.com/CodeShayk/Parsley.Net/releases/tag/v1.0.0) |
 | [`v1.1.0`](https://github.com/CodeShayk/parsley.net/tree/v1.1.0) |  [Notes](https://github.com/CodeShayk/Parsley.Net/releases/tag/v1.1.0) |
+| [`v1.1.5`](https://github.com/CodeShayk/parsley.net/tree/v1.1.5) |  [Notes](https://github.com/CodeShayk/Parsley.Net/releases/tag/v1.1.5) |
 
 ## Credits
 Thank you for reading. Please fork, explore, contribute and report. Happy Coding !! :)
