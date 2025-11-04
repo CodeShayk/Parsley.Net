@@ -1,4 +1,4 @@
-# <img src="https://github.com/CodeShayk/parsley.net/blob/master/Images/ninja-icon-16.png" alt="ninja" style="width:30px;"/> Parsley.Net v1.1.5
+# <img src="https://github.com/CodeShayk/parsley.net/blob/master/Images/ninja-icon-16.png" alt="ninja" style="width:30px;"/> Parsley.Net v2.0.0
 [![NuGet version](https://badge.fury.io/nu/Parsley.Net.svg)](https://badge.fury.io/nu/Parsley.Net) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/CodeShayk/Parsley.Net/blob/master/LICENSE.md) 
 [![GitHub Release](https://img.shields.io/github/v/release/CodeShayk/Parsley.Net?logo=github&sort=semver)](https://github.com/CodeShayk/Parsley.Net/releases/latest)
 [![master-build](https://github.com/CodeShayk/parsley.net/actions/workflows/Master-Build.yml/badge.svg)](https://github.com/CodeShayk/parsley.net/actions/workflows/Master-Build.yml)
@@ -48,12 +48,14 @@ If you are having problems, please let me know by [raising a new issue](https://
 This project is licensed with the [MIT license](LICENSE).
 
 ## Version History
-The main branch is now on .NET 9.0. 
-| Version  | Release Notes |
-| -------- | --------|
-| [`v1.0.0`](https://github.com/CodeShayk/parsley.net/tree/v1.0.0) |  [Notes](https://github.com/CodeShayk/Parsley.Net/releases/tag/v1.0.0) |
-| [`v1.1.0`](https://github.com/CodeShayk/parsley.net/tree/v1.1.0) |  [Notes](https://github.com/CodeShayk/Parsley.Net/releases/tag/v1.1.0) |
+The main branch is now on .NET 9.0.
+
+| Version                                                          | Release Notes                                                          |
+| ---------------------------------------------------------------- | -----------------------------------------------------------------------|
+| [`v2.0.0`](https://github.com/CodeShayk/parsley.net/tree/v2.0.0) |  [Notes](https://github.com/CodeShayk/Parsley.Net/releases/tag/v2.0.0) - MAJOR RELEASE: Comprehensive release with enhanced error reporting, improved performance, configuration options and result pattern |
 | [`v1.1.5`](https://github.com/CodeShayk/parsley.net/tree/v1.1.5) |  [Notes](https://github.com/CodeShayk/Parsley.Net/releases/tag/v1.1.5) |
+| [`v1.1.0`](https://github.com/CodeShayk/parsley.net/tree/v1.1.0) |  [Notes](https://github.com/CodeShayk/Parsley.Net/releases/tag/v1.1.0) |
+| [`v1.0.0`](https://github.com/CodeShayk/parsley.net/tree/v1.0.0) |  [Notes](https://github.com/CodeShayk/Parsley.Net/releases/tag/v1.0.0) |
 
 ## Credits
 Thank you for reading. Please fork, explore, contribute and report. Happy Coding !! :)
