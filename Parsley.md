@@ -192,4 +192,201 @@ public class NameType
 ```
 Now parsing the file should hydrate data correctly to the Employee FileLine class and its nested name type.
 
+## Parsley.Net v2.0.0 - Major Release Features
+
+Parsley.Net v2.0.0 represents a comprehensive evolution of the library with enhanced functionality while maintaining complete backward compatibility. This major release introduces new configuration options, improved error handling, and better performance.
+
+### 1. Enhanced Error Reporting with Line Numbers
+
+The v2.0.0 release significantly improves error reporting by providing line numbers and field names in error messages:
+
+```
+public class EnhancedErrorExample : IFileLine
+{
+    [Column(0)]
+    public string Code { get; set; }
+    
+    [Column(1)] 
+    public NameType Name { get; set; }
+    
+    public int Index { get; set; }
+    public IList<string> Errors { get; set; }
+}
+
+// Usage - error messages now include line numbers and field details
+var parser = new Parser('|');
+var lines = new[] { "GB-01|Invalid Name Format", "XX-99|Another Invalid Entry" };
+
+var result = parser.Parse<EnhancedErrorExample>(lines);
+
+foreach (var item in result)
+{
+    if (item.Errors?.Any() == true)
+    {
+        Console.WriteLine($"Line {item.Index}: {string.Join(", ", item.Errors)}");
+        // Example: "Line 1: Name failed to parse - Invalid name format in value 'Invalid Name Format'"
+    }
+}
+```
+
+### 2. ParseOptions Configuration Class
+
+Introducing `ParseOptions` to configure parsing behavior with various options:
+
+```
+public class ParseOptions
+{
+    public char Delimiter { get; set; } = ',';        // Default delimiter
+    public bool SkipHeaderLine { get; set; } = false; // Skip first line as header
+    public bool TrimFieldValues { get; set; } = true; // Trim whitespace from values
+    public bool IncludeEmptyLines { get; set; } = true; // Include empty lines in output
+    public int MaxErrors { get; set; } = -1;         // Max errors to collect (-1 for unlimited)
+    public int BufferSize { get; set; } = 1024;      // Buffer size for streaming operations
+}
+
+// Usage examples
+var customParser = new Parser();
+
+// Parse with custom options
+var options = new ParseOptions 
+{ 
+    Delimiter = '|',
+    SkipHeaderLine = true, 
+    TrimFieldValues = true,
+    IncludeEmptyLines = false,
+    MaxErrors = 100 
+};
+
+var result = await parser.ParseAsync<Employee>("data.csv", options);
+```
+
+### 3. TryParse and TryParseAsync Methods
+
+New methods added for more explicit error handling using the result pattern:
+
+```
+// Synchronous TryParse methods
+public Result<T[]> TryParse<T>(string filepath) where T : IFileLine, new();
+public Result<T[]> TryParse<T>(string filepath, ParseOptions options) where T : IFileLine, new();
+public Result<T[]> TryParse<T>(string[] lines) where T : IFileLine, new();
+public Result<T[]> TryParse<T>(string[] lines, ParseOptions options) where T : IFileLine, new();
+public Result<T[]> TryParse<T>(byte[] bytes, Encoding encoding = null) where T : IFileLine, new();
+public Result<T[]> TryParse<T>(byte[] bytes, Encoding encoding, ParseOptions options) where T : IFileLine, new();
+public Result<T[]> TryParse<T>(Stream stream, Encoding encoding = null) where T : IFileLine, new();
+public Result<T[]> TryParse<T>(Stream stream, Encoding encoding, ParseOptions options) where T : IFileLine, new();
+
+// Asynchronous TryParse methods  
+public async Task<Result<T[]>> TryParseAsync<T>(string filepath) where T : IFileLine, new();
+public async Task<Result<T[]>> TryParseAsync<T>(string filepath, ParseOptions options) where T : IFileLine, new();
+public async Task<Result<T[]>> TryParseAsync<T>(string[] lines) where T : IFileLine, new();
+public async Task<Result<T[]>> TryParseAsync<T>(string[] lines, ParseOptions options) where T : IFileLine, new();
+public async Task<Result<T[]>> TryParseAsync<T>(byte[] bytes, Encoding encoding = null) where T : IFileLine, new();
+public async Task<Result<T[]>> TryParseAsync<T>(byte[] bytes, Encoding encoding, ParseOptions options) where T : IFileLine, new();
+public async Task<Result<T[]>> TryParseAsync<T>(Stream stream, Encoding encoding = null) where T : IFileLine, new();
+public async Task<Result<T[]>> TryParseAsync<T>(Stream stream, Encoding encoding, ParseOptions options) where T : IFileLine, new();
+
+// Usage example with TryParse
+var parser = new Parser('|');
+
+// Safe parsing without throwing exceptions
+var result = parser.TryParse<Employee>("employees.csv");
+
+if (result.IsSuccess)
+{
+    var employees = result.Value;
+    Console.WriteLine($"Successfully parsed {employees.Length} employees");
+    
+    // Check for individual record errors
+    var validRecords = employees.Where(e => e.Errors?.Any() != true).ToArray();
+    var errorRecords = employees.Where(e => e.Errors?.Any() == true).ToArray();
+    
+    Console.WriteLine($"Valid records: {validRecords.Length}, Error records: {errorRecords.Length}");
+}
+else
+{
+    // Global parsing errors occurred
+    Console.WriteLine($"Parsing failed: {result.Error}");
+    foreach (var error in result.Errors)
+    {
+        Console.WriteLine($"  - {error}");
+    }
+}
+```
+
+### 4. Result Pattern Implementation
+
+The `Result<T>` class provides explicit success/failure semantics:
+
+```
+public class Result<T>
+{
+    public bool IsSuccess { get; }
+    public bool IsFailure => !IsSuccess;
+    public T Value { get; }
+    public IList<string> Errors { get; }
+    
+    public static Result<T> Success(T value);
+    public static Result<T> Failure(string error);
+    public static Result<T> Failure(IList<string> errors);
+    public static Result<T> Failure(string error, IList<string> errors);
+}
+
+// Examples:
+var successResult = Result<string>.Success("Operation completed successfully");
+var errorResult = Result<Employee[]>.Failure("File not found");
+```
+
+### 5. Configuration Options Usage
+
+The new ParseOptions class allows for flexible parsing configurations:
+
+```
+// Example 1: CSV with headers, skipping first line
+var csvOptions = new ParseOptions 
+{ 
+    Delimiter = ',', 
+    SkipHeaderLine = true 
+};
+var csvResult = parser.Parse<Employee>("employees.csv", csvOptions);
+
+// Example 2: TSV with tab delimiter, no trimming
+var tsvOptions = new ParseOptions 
+{ 
+    Delimiter = '\t', 
+    TrimFieldValues = false 
+};
+var tsvResult = parser.Parse<DataRecord>("data.tsv", tsvOptions);
+
+// Example 3: PSV with pipe delimiter, limiting errors
+var psvOptions = new ParseOptions 
+{ 
+    Delimiter = '|', 
+    MaxErrors = 50,
+    IncludeEmptyLines = false
+};
+var psvResult = await parser.TryParseAsync<Employee>("data.psv", psvOptions);
+```
+
+### 6. Backward Compatibility
+
+All v2.0.0 changes maintain complete backward compatibility:
+
+```
+// All existing code continues to work unchanged
+var parser = new Parser('|');
+var employees = parser.Parse<Employee>("employees.csv"); // Still works
+var employeesAsync = await parser.ParseAsync<Employee>("employees.csv"); // Still works
+
+// New functionality builds upon existing methods
+var tryResult = parser.TryParse<Employee>("employees.csv"); // New in v2.0.0
+```
+
+### Migration Guide
+
+Upgrading from v1.x to v2.0.0 is seamless for existing code:
+
+1. **Existing code**: No changes required - all previous APIs remain the same
+2. **New features**: Gradually adopt TryParse methods and ParseOptions for enhanced functionality
+3. **Better error handling**: Switch to TryParse methods where more explicit error handling is needed
+
 

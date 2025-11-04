@@ -52,6 +52,7 @@ The main branch is now on .NET 9.0.
 
 | Version                                                          | Release Notes                                                          |
 | ---------------------------------------------------------------- | -----------------------------------------------------------------------|
+| [`v2.0.0`](https://github.com/CodeShayk/parsley.net/tree/v2.0.0) |  [Notes](https://github.com/CodeShayk/Parsley.Net/releases/tag/v2.0.0) - MAJOR RELEASE: Comprehensive release with enhanced error reporting, improved performance, configuration options and result pattern |
 | [`v1.1.5`](https://github.com/CodeShayk/parsley.net/tree/v1.1.5) |  [Notes](https://github.com/CodeShayk/Parsley.Net/releases/tag/v1.1.5) |
 | [`v1.1.0`](https://github.com/CodeShayk/parsley.net/tree/v1.1.0) |  [Notes](https://github.com/CodeShayk/Parsley.Net/releases/tag/v1.1.0) |
 | [`v1.0.0`](https://github.com/CodeShayk/parsley.net/tree/v1.0.0) |  [Notes](https://github.com/CodeShayk/Parsley.Net/releases/tag/v1.0.0) |
