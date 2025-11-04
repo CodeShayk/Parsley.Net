@@ -1,8 +1,5 @@
-using NUnit.Framework;
-using System.Collections.Generic;
-using System.Linq;
-using Parsley.Tests.FileLines;
 using parsley;
+using Parsley.Tests.FileLines;
 
 namespace Parsley.Tests
 {
@@ -15,10 +12,10 @@ namespace Parsley.Tests
             // Test with global errors present
             var noErrorLine1 = new FileLine { Index = 0 };
             noErrorLine1.Errors.Clear(); // Ensure no errors
-            
+
             var noErrorLine2 = new FileLine { Index = 1 };
             noErrorLine2.Errors.Clear(); // Ensure no errors
-            
+
             var values = new[] { noErrorLine1, noErrorLine2 };
             var globalErrors = new List<string> { "Global error 1", "Global error 2" }; // With global errors
 
@@ -31,17 +28,17 @@ namespace Parsley.Tests
             Assert.That(result.SuccessCount, Is.EqualTo(2));
             Assert.That(result.HasErrors, Is.True); // Because of global errors
         }
-        
+
         [Test]
         public void TestParseResultConstructorWithNoErrorsShouldHaveNoErrors()
         {
             // Test with no errors at all
             var noErrorLine1 = new FileLine { Index = 0 };
             noErrorLine1.Errors.Clear(); // Ensure no errors
-            
+
             var noErrorLine2 = new FileLine { Index = 1 };
             noErrorLine2.Errors.Clear(); // Ensure no errors
-            
+
             var values = new[] { noErrorLine1, noErrorLine2 };
             var globalErrors = new List<string>(); // No global errors
 

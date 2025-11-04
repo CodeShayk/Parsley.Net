@@ -1,7 +1,7 @@
-using parsley;
-using Microsoft.Extensions.DependencyInjection;
-using Parsley.Tests.FileLines;
 using System.Text;
+using Microsoft.Extensions.DependencyInjection;
+using parsley;
+using Parsley.Tests.FileLines;
 
 namespace Parsley.Tests
 {

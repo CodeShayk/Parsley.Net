@@ -30,7 +30,7 @@ namespace parsley
         {
             return Parse<T>(filepath, Options);
         }
-        
+
         public T[] Parse<T>(string filepath, ParseOptions options) where T : IFileLine, new()
         {
             if (string.IsNullOrEmpty(filepath) || !File.Exists(filepath))
@@ -45,42 +45,14 @@ namespace parsley
         {
             return Parse<T>(lines, Options);
         }
-        
+
         public T[] Parse<T>(string[] lines, ParseOptions options) where T : IFileLine, new()
         {
-            if (options == null) options = new ParseOptions();
-            
-            if (lines == null || lines.Length == 0)
-                return Array.Empty<T>();
-
-            // Store original lines to work with
-            var originalLines = lines;
-
-            // Handle SkipHeaderLine option
-            if (options.SkipHeaderLine && originalLines.Length > 0)
-            {
-                originalLines = originalLines.Skip(1).ToArray();
-            }
-
-            // Determine which lines to process
-            var linesToProcess = options.IncludeEmptyLines 
-                ? originalLines 
-                : originalLines.Where(line => !string.IsNullOrWhiteSpace(line)).ToArray();
-
+            var linesToProcess = ProcessLinesArray(lines, options);
             if (linesToProcess.Length == 0)
                 return Array.Empty<T>();
 
-            var list = new T[linesToProcess.Length];
-
-            // Sequential processing to avoid potential parallel processing issues
-            for (int i = 0; i < linesToProcess.Length; i++)
-            {
-                var parsed = ParseLine<T>(linesToProcess[i], i);
-                parsed.Index = i;
-                list[i] = parsed;
-            }
-
-            return list;
+            return ProcessLines<T>(linesToProcess, options);
         }
 
         private string[] ReadToLines(string path)
@@ -138,6 +110,7 @@ namespace parsley
             }
 
             foreach (var propInfo in propInfos)
+            {
                 try
                 {
                     var attribute = (ColumnAttribute)propInfo.GetCustomAttributes(typeof(ColumnAttribute), true).First();
@@ -190,6 +163,7 @@ namespace parsley
                         obj.SetError(string.Format(Resources.LineExceptionFormat, propInfo.Name, e.Message));
                     }
                 }
+            }
 
             return obj;
         }
@@ -205,41 +179,79 @@ namespace parsley
         private string[] GetDelimiterSeparatedValues(string line)
         {
             var values = line.Split(Options.Delimiter);
-            
+
             if (Options.TrimFieldValues)
             {
                 values = values.Select(x => !string.IsNullOrWhiteSpace(x) ? x.Trim() : x).ToArray();
             }
-            
+
             return values;
         }
 
-        public T[] Parse<T>(Stream stream, Encoding encoding = null) where T : IFileLine, new()
+        private static Result<T[]> TryOperation<T>(Func<T[]> operation) where T : IFileLine, new()
         {
-            return Parse<T>(stream, encoding, Options);
+            try
+            {
+                return Result<T[]>.Success(operation());
+            }
+            catch (Exception ex)
+            {
+                return Result<T[]>.Failure(ex.Message);
+            }
         }
-        
-        public T[] Parse<T>(Stream stream, Encoding encoding, ParseOptions options) where T : IFileLine, new()
+
+        private static async Task<Result<T[]>> TryOperationAsync<T>(Func<Task<T[]>> operation) where T : IFileLine, new()
         {
-            if (options == null) options = new ParseOptions();
-            
-            if (stream == null || stream.Length == 0)
+            try
+            {
+                var result = await operation();
+                return Result<T[]>.Success(result);
+            }
+            catch (Exception ex)
+            {
+                return Result<T[]>.Failure(ex.Message);
+            }
+        }
+
+        private T[] ProcessLines<T>(string[] linesToProcess, ParseOptions options) where T : IFileLine, new()
+        {
+            if (linesToProcess.Length == 0)
                 return Array.Empty<T>();
 
+            var list = new T[linesToProcess.Length];
+
+            // Sequential processing to avoid potential parallel processing issues
+            for (int i = 0; i < linesToProcess.Length; i++)
+            {
+                var parsed = ParseLine<T>(linesToProcess[i], i);
+                parsed.Index = i;
+                list[i] = parsed;
+            }
+
+            return list;
+        }
+
+        private async Task<List<string>> ReadLinesFromStreamAsync(Stream stream, ParseOptions options, Encoding encoding, Func<StreamReader, Task<string>> readLineFunc)
+        {
             var lines = new List<string>();
             using (var reader = new StreamReader(stream, encoding ?? Encoding.UTF8))
             {
                 string line;
                 int lineNumber = 0;
-                while ((line = reader.ReadLine()) != null)
+
+                do
                 {
+                    line = await readLineFunc(reader);
+                    if (line == null)
+                        break;
+
                     // If it's the first line and we should skip header, skip it
                     if (options.SkipHeaderLine && lineNumber == 0)
                     {
                         lineNumber++;
                         continue;
                     }
-                    
+
                     var processedLine = options.TrimFieldValues ? line.Trim() : line;
                     if (!options.IncludeEmptyLines && string.IsNullOrWhiteSpace(processedLine))
                     {
@@ -250,8 +262,84 @@ namespace parsley
                         lines.Add(processedLine);
                     }
                     lineNumber++;
+                } while (line != null);
+            }
+            return lines;
+        }
+
+        private string[] ProcessLinesArray(string[] lines, ParseOptions options)
+        {
+            if (options == null)
+                options = new ParseOptions();
+
+            if (lines == null || lines.Length == 0)
+                return Array.Empty<string>();
+
+            // Store original lines to work with
+            var originalLines = lines;
+
+            // Handle SkipHeaderLine option
+            if (options.SkipHeaderLine && originalLines.Length > 0)
+            {
+                originalLines = originalLines.Skip(1).ToArray();
+            }
+
+            // Determine which lines to process
+            var linesToProcess = options.IncludeEmptyLines
+                ? originalLines
+                : originalLines.Where(line => !string.IsNullOrWhiteSpace(line)).ToArray();
+
+            return linesToProcess;
+        }
+
+        private List<string> ReadLinesFromStream(Stream stream, ParseOptions options, Encoding encoding)
+        {
+            var lines = new List<string>();
+            using (var reader = new StreamReader(stream, encoding ?? Encoding.UTF8))
+            {
+                var allLines = new List<string>();
+                string line;
+                while ((line = reader.ReadLine()) != null)
+                {
+                    allLines.Add(line);
+                }
+
+                for (int i = 0; i < allLines.Count; i++)
+                {
+                    // If it's the first line and we should skip header, skip it
+                    if (options.SkipHeaderLine && i == 0)
+                    {
+                        continue;
+                    }
+
+                    var processedLine = options.TrimFieldValues ? allLines[i].Trim() : allLines[i];
+                    if (!options.IncludeEmptyLines && string.IsNullOrWhiteSpace(processedLine))
+                    {
+                        // Skip empty lines if not including them
+                    }
+                    else
+                    {
+                        lines.Add(processedLine);
+                    }
                 }
             }
+            return lines;
+        }
+
+        public T[] Parse<T>(Stream stream, Encoding encoding = null) where T : IFileLine, new()
+        {
+            return Parse<T>(stream, encoding, Options);
+        }
+
+        public T[] Parse<T>(Stream stream, Encoding encoding, ParseOptions options) where T : IFileLine, new()
+        {
+            if (options == null)
+                options = new ParseOptions();
+
+            if (stream == null || stream.Length == 0)
+                return Array.Empty<T>();
+
+            var lines = ReadLinesFromStream(stream, options, encoding);
 
             return lines.Any() ? Parse<T>(lines.ToArray(), options) : Array.Empty<T>();
         }
@@ -260,7 +348,7 @@ namespace parsley
         {
             return Parse<T>(bytes, encoding, Options);
         }
-        
+
         public T[] Parse<T>(byte[] bytes, Encoding encoding, ParseOptions options) where T : IFileLine, new()
         {
             if (bytes == null || bytes.Length == 0)
@@ -273,7 +361,7 @@ namespace parsley
         {
             return await ParseAsync<T>(filepath, Options);
         }
-        
+
         public async Task<T[]> ParseAsync<T>(string filepath, ParseOptions options) where T : IFileLine, new()
         {
             if (string.IsNullOrEmpty(filepath) || !File.Exists(filepath))
@@ -288,7 +376,7 @@ namespace parsley
         {
             return await ParseAsync<T>(bytes, encoding, Options);
         }
-        
+
         public async Task<T[]> ParseAsync<T>(byte[] bytes, Encoding encoding, ParseOptions options) where T : IFileLine, new()
         {
             if (bytes == null || bytes.Length == 0)
@@ -301,11 +389,12 @@ namespace parsley
         {
             return await ParseAsync<T>(stream, encoding, Options);
         }
-        
+
         public async Task<T[]> ParseAsync<T>(Stream stream, Encoding encoding, ParseOptions options) where T : IFileLine, new()
         {
-            if (options == null) options = new ParseOptions();
-            
+            if (options == null)
+                options = new ParseOptions();
+
             if (stream == null)
                 return Array.Empty<T>();
 
@@ -313,32 +402,7 @@ namespace parsley
             if (stream.Length == 0)
                 return Array.Empty<T>();
 
-            var lines = new List<string>();
-            using (var reader = new StreamReader(stream, encoding ?? Encoding.UTF8))
-            {
-                string line;
-                int lineNumber = 0;
-                while ((line = await reader.ReadLineAsync()) != null)
-                {
-                    // If it's the first line and we should skip header, skip it
-                    if (options.SkipHeaderLine && lineNumber == 0)
-                    {
-                        lineNumber++;
-                        continue;
-                    }
-                    
-                    var processedLine = options.TrimFieldValues ? line.Trim() : line;
-                    if (!options.IncludeEmptyLines && string.IsNullOrWhiteSpace(processedLine))
-                    {
-                        // Skip empty lines if not including them
-                    }
-                    else
-                    {
-                        lines.Add(processedLine);
-                    }
-                    lineNumber++;
-                }
-            }
+            var lines = await ReadLinesFromStreamAsync(stream, options, encoding, (reader) => reader.ReadLineAsync());
 
             return lines.Any() ? await ParseAsync<T>(lines.ToArray(), options) : Array.Empty<T>();
         }
@@ -347,250 +411,103 @@ namespace parsley
         {
             return await ParseAsync<T>(lines, Options);
         }
-        
+
         public async Task<T[]> ParseAsync<T>(string[] lines, ParseOptions options) where T : IFileLine, new()
         {
-            if (options == null) options = new ParseOptions();
-            
-            if (lines == null || lines.Length == 0)
-                return Array.Empty<T>();
-
-            // Store original lines to work with
-            var originalLines = lines;
-
-            // Handle SkipHeaderLine option
-            if (options.SkipHeaderLine && originalLines.Length > 0)
+            string[] linesToProcess;
+            try
             {
-                originalLines = originalLines.Skip(1).ToArray();
+                linesToProcess = ProcessLinesArray(lines, options);
             }
-
-            // Determine which lines to process
-            var linesToProcess = options.IncludeEmptyLines 
-                ? originalLines 
-                : originalLines.Where(line => !string.IsNullOrWhiteSpace(line)).ToArray();
+            catch
+            {
+                return Array.Empty<T>();
+            }
 
             if (linesToProcess.Length == 0)
                 return Array.Empty<T>();
 
-            var list = new T[linesToProcess.Length];
-
-            // Process sequentially in async context
-            for (int i = 0; i < linesToProcess.Length; i++)
-            {
-                var parsed = await Task.Run(() => ParseLine<T>(linesToProcess[i], i));
-                parsed.Index = i;
-                list[i] = parsed;
-            }
-
-            return list;
+            return await Task.Run(() => ProcessLines<T>(linesToProcess, options));
         }
-        
+
         public Result<T[]> TryParse<T>(string filepath) where T : IFileLine, new()
         {
-            try
-            {
-                var result = Parse<T>(filepath, Options);
-                return Result<T[]>.Success(result);
-            }
-            catch (Exception ex)
-            {
-                return Result<T[]>.Failure(ex.Message);
-            }
+            return TryOperation(() => Parse<T>(filepath, Options));
         }
-        
+
         public Result<T[]> TryParse<T>(string filepath, ParseOptions options) where T : IFileLine, new()
         {
-            try
-            {
-                var result = Parse<T>(filepath, options);
-                return Result<T[]>.Success(result);
-            }
-            catch (Exception ex)
-            {
-                return Result<T[]>.Failure(ex.Message);
-            }
+            return TryOperation(() => Parse<T>(filepath, options));
         }
-        
+
         public Result<T[]> TryParse<T>(string[] lines) where T : IFileLine, new()
         {
-            try
-            {
-                var result = Parse<T>(lines, Options);
-                return Result<T[]>.Success(result);
-            }
-            catch (Exception ex)
-            {
-                return Result<T[]>.Failure(ex.Message);
-            }
+            return TryOperation(() => Parse<T>(lines, Options));
         }
-        
+
         public Result<T[]> TryParse<T>(string[] lines, ParseOptions options) where T : IFileLine, new()
         {
-            try
-            {
-                var result = Parse<T>(lines, options);
-                return Result<T[]>.Success(result);
-            }
-            catch (Exception ex)
-            {
-                return Result<T[]>.Failure(ex.Message);
-            }
+            return TryOperation(() => Parse<T>(lines, options));
         }
-        
+
         public Result<T[]> TryParse<T>(byte[] bytes, Encoding encoding = null) where T : IFileLine, new()
         {
-            try
-            {
-                var result = Parse<T>(bytes, encoding, Options);
-                return Result<T[]>.Success(result);
-            }
-            catch (Exception ex)
-            {
-                return Result<T[]>.Failure(ex.Message);
-            }
+            return TryOperation(() => Parse<T>(bytes, encoding, Options));
         }
-        
+
         public Result<T[]> TryParse<T>(byte[] bytes, Encoding encoding, ParseOptions options) where T : IFileLine, new()
         {
-            try
-            {
-                var result = Parse<T>(bytes, encoding, options);
-                return Result<T[]>.Success(result);
-            }
-            catch (Exception ex)
-            {
-                return Result<T[]>.Failure(ex.Message);
-            }
+            return TryOperation(() => Parse<T>(bytes, encoding, options));
         }
-        
+
         public Result<T[]> TryParse<T>(Stream stream, Encoding encoding = null) where T : IFileLine, new()
         {
-            try
-            {
-                var result = Parse<T>(stream, encoding, Options);
-                return Result<T[]>.Success(result);
-            }
-            catch (Exception ex)
-            {
-                return Result<T[]>.Failure(ex.Message);
-            }
+            return TryOperation(() => Parse<T>(stream, encoding, Options));
         }
-        
+
         public Result<T[]> TryParse<T>(Stream stream, Encoding encoding, ParseOptions options) where T : IFileLine, new()
         {
-            try
-            {
-                var result = Parse<T>(stream, encoding, options);
-                return Result<T[]>.Success(result);
-            }
-            catch (Exception ex)
-            {
-                return Result<T[]>.Failure(ex.Message);
-            }
+            return TryOperation(() => Parse<T>(stream, encoding, options));
         }
-        
+
         public async Task<Result<T[]>> TryParseAsync<T>(string filepath) where T : IFileLine, new()
         {
-            try
-            {
-                var result = await ParseAsync<T>(filepath, Options);
-                return Result<T[]>.Success(result);
-            }
-            catch (Exception ex)
-            {
-                return Result<T[]>.Failure(ex.Message);
-            }
+            return await TryOperationAsync(() => ParseAsync<T>(filepath, Options));
         }
-        
+
         public async Task<Result<T[]>> TryParseAsync<T>(string filepath, ParseOptions options) where T : IFileLine, new()
         {
-            try
-            {
-                var result = await ParseAsync<T>(filepath, options);
-                return Result<T[]>.Success(result);
-            }
-            catch (Exception ex)
-            {
-                return Result<T[]>.Failure(ex.Message);
-            }
+            return await TryOperationAsync(() => ParseAsync<T>(filepath, options));
         }
-        
+
         public async Task<Result<T[]>> TryParseAsync<T>(string[] lines) where T : IFileLine, new()
         {
-            try
-            {
-                var result = await ParseAsync<T>(lines, Options);
-                return Result<T[]>.Success(result);
-            }
-            catch (Exception ex)
-            {
-                return Result<T[]>.Failure(ex.Message);
-            }
+            return await TryOperationAsync(() => ParseAsync<T>(lines, Options));
         }
-        
+
         public async Task<Result<T[]>> TryParseAsync<T>(string[] lines, ParseOptions options) where T : IFileLine, new()
         {
-            try
-            {
-                var result = await ParseAsync<T>(lines, options);
-                return Result<T[]>.Success(result);
-            }
-            catch (Exception ex)
-            {
-                return Result<T[]>.Failure(ex.Message);
-            }
+            return await TryOperationAsync(() => ParseAsync<T>(lines, options));
         }
-        
+
         public async Task<Result<T[]>> TryParseAsync<T>(byte[] bytes, Encoding encoding = null) where T : IFileLine, new()
         {
-            try
-            {
-                var result = await ParseAsync<T>(bytes, encoding, Options);
-                return Result<T[]>.Success(result);
-            }
-            catch (Exception ex)
-            {
-                return Result<T[]>.Failure(ex.Message);
-            }
+            return await TryOperationAsync(() => ParseAsync<T>(bytes, encoding, Options));
         }
-        
+
         public async Task<Result<T[]>> TryParseAsync<T>(byte[] bytes, Encoding encoding, ParseOptions options) where T : IFileLine, new()
         {
-            try
-            {
-                var result = await ParseAsync<T>(bytes, encoding, options);
-                return Result<T[]>.Success(result);
-            }
-            catch (Exception ex)
-            {
-                return Result<T[]>.Failure(ex.Message);
-            }
+            return await TryOperationAsync(() => ParseAsync<T>(bytes, encoding, options));
         }
-        
+
         public async Task<Result<T[]>> TryParseAsync<T>(Stream stream, Encoding encoding = null) where T : IFileLine, new()
         {
-            try
-            {
-                var result = await ParseAsync<T>(stream, encoding, Options);
-                return Result<T[]>.Success(result);
-            }
-            catch (Exception ex)
-            {
-                return Result<T[]>.Failure(ex.Message);
-            }
+            return await TryOperationAsync(() => ParseAsync<T>(stream, encoding, Options));
         }
-        
+
         public async Task<Result<T[]>> TryParseAsync<T>(Stream stream, Encoding encoding, ParseOptions options) where T : IFileLine, new()
         {
-            try
-            {
-                var result = await ParseAsync<T>(stream, encoding, options);
-                return Result<T[]>.Success(result);
-            }
-            catch (Exception ex)
-            {
-                return Result<T[]>.Failure(ex.Message);
-            }
+            return await TryOperationAsync(() => ParseAsync<T>(stream, encoding, options));
         }
     }
 }

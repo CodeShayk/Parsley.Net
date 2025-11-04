@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace parsley
 {
@@ -10,10 +9,12 @@ namespace parsley
     public class Result<T>
     {
         public bool IsSuccess { get; }
-        public bool IsFailure 
-        { 
-            get { return !IsSuccess; } 
+
+        public bool IsFailure
+        {
+            get { return !IsSuccess; }
         }
+
         public T Value { get; }
         public IList<string> Errors { get; }
 
@@ -50,10 +51,10 @@ namespace parsley
             var allErrors = new List<string>();
             if (!string.IsNullOrEmpty(error))
                 allErrors.Add(error);
-            
+
             if (errors != null)
                 allErrors.AddRange(errors);
-            
+
             return new Result<T>(false, default(T), allErrors);
         }
     }
